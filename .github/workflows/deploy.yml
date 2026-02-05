@@ -42,6 +42,27 @@ jobs:
       - name: Install dependencies
         run: npm ci
       
+      - name: Debug - Check environment variables
+        run: |
+          echo "Checking if secrets are set..."
+          if [ -z "$NEXT_PUBLIC_SUPABASE_URL" ]; then
+            echo "❌ ERROR: NEXT_PUBLIC_SUPABASE_URL is NOT set!"
+            echo "Please add this secret in GitHub repo Settings > Secrets > Actions"
+            exit 1
+          else
+            echo "✅ NEXT_PUBLIC_SUPABASE_URL is set (value hidden for security)"
+          fi
+          if [ -z "$NEXT_PUBLIC_SUPABASE_ANON_KEY" ]; then
+            echo "❌ ERROR: NEXT_PUBLIC_SUPABASE_ANON_KEY is NOT set!"
+            echo "Please add this secret in GitHub repo Settings > Secrets > Actions"
+            exit 1
+          else
+            echo "✅ NEXT_PUBLIC_SUPABASE_ANON_KEY is set (value hidden for security)"
+          fi
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+      
       - name: Build Next.js static export
         run: npm run build
         env:

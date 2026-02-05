@@ -105,7 +105,7 @@ export function BlockList({ blocks, onDelete, currency = 'USD' }: BlockListProps
                   </td>
                   <td className="px-4 py-4 whitespace-nowrap text-right text-sm">
                     <Link
-                      href={`/blocks/${block.id}`}
+                      href={`/blocks/edit?id=${block.id}`}
                       className="text-marble-600 hover:text-marble-900 mr-3"
                     >
                       Düzenle

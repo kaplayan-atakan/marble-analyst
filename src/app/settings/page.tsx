@@ -75,7 +75,7 @@ export default function SettingsPage() {
                     </label>
                     <select
                       value={currentValues.currency}
-                      onChange={e => setFormData(prev => ({ ...prev, currency: e.target.value }))}
+                      onChange={e => setFormData(prev => ({ ...prev, currency: e.target.value as 'USD' | 'EUR' | 'TRY' }))}
                       className={inputClass}
                     >
                       <option value="USD">USD ($)</option>

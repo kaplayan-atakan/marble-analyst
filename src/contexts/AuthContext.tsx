@@ -53,6 +53,28 @@ interface AuthProviderProps {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // =============================================================================
+// Helper Functions
+// =============================================================================
+
+/**
+ * Gets the correct redirect URL for OAuth/Email confirmation.
+ * GitHub Pages project sites require the repo name in the path.
+ * window.location.origin only returns the domain (e.g., username.github.io),
+ * not the project path (/marble-analyst).
+ */
+const getRedirectUrl = (): string => {
+  if (typeof window === 'undefined') return '';
+  
+  // Localhost: use origin directly
+  if (window.location.hostname === 'localhost') {
+    return window.location.origin;
+  }
+  
+  // Production (GitHub Pages): append repo name
+  return `${window.location.origin}/marble-analyst`;
+};
+
+// =============================================================================
 // Provider Component
 // =============================================================================
 
@@ -98,9 +120,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: typeof window !== 'undefined' 
-            ? `${window.location.origin}/` 
-            : undefined,
+          redirectTo: getRedirectUrl() || undefined,
         },
       });
       if (error) throw error;
@@ -146,9 +166,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         email,
         password,
         options: {
-          emailRedirectTo: typeof window !== 'undefined' 
-            ? `${window.location.origin}/` 
-            : undefined,
+          emailRedirectTo: getRedirectUrl() || undefined,
         },
       });
       
